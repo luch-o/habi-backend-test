@@ -18,7 +18,7 @@ class Database:
         if cls._connection is None:
             cls._connection = connect(
                 host=os.getenv("DB_HOST"),
-                port=int(os.getenv("DB_PORT")),
+                port=int(os.getenv("DB_PORT", 3306)),
                 db=os.getenv("DB_DBNAME"),
                 user=os.getenv("DB_USER"),
                 password=os.getenv("DB_PASSWORD"),
