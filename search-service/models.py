@@ -1,10 +1,10 @@
 import re
 from enum import Enum
 
-from connection import connection
+from database import Database
 
 
-class State(str, Enum):
+class Status(str, Enum):
     """Enumeration with valid states visible to the user.
 
     Used to avoid the user to search a property with a state that should ve invisible to them.
@@ -16,7 +16,12 @@ class State(str, Enum):
 
 
 class Property:
-    base_query = """
+    address: str
+    city: str
+    price: int
+    description: str | None
+    status: Status
+    _base_query = """
     SELECT
         -- the fields we want to return to the user
         p.address,
@@ -41,13 +46,29 @@ class Property:
         s.name in ("pre_venta", "en_venta", "vendido") and p.price > 0;
     """
 
-    @staticmethod
-    def _get_result_set(query: str, params: list | dict | None) -> tuple[tuple]:
-        """Query the database and returns de resultset."""
-        with connection.cursor() as cursor:
+    def __init__(
+        self, address: str, city: str, price: int, description: str | None, state: str
+    ):
+        self.address = address
+        self.city = city
+        self.price = price
+        self.description = description
+        self.status = Status(state)
+
+    @classmethod
+    def _get_result_set(
+        cls, query: str, params: list | dict | None
+    ) -> list["Property"]:
+        """Query the database and returns a list of Property objects from the resultset."""
+        connection = Database.connect()
+        cursor = connection.cursor()
+        if params is not None:
             cursor.execute(query, params)
-            result_set = cursor.fetchall()
-        return result_set
+        else:
+            cursor.execute(query)
+        result_set = cursor.fetchall()
+        cursor.close()
+        return [cls(*record) for record in result_set]
 
     @classmethod
     def _parse_where_clause(cls, conditions: list[str]) -> str:
@@ -55,7 +76,7 @@ class Property:
         query = re.sub(
             r"(WHERE\s.*)[;A-Z]",
             lambda m: " and ".join([m.group(1)] + conditions) + ";",
-            cls.base_query,
+            cls._base_query,
         )
         return query
 
@@ -64,8 +85,8 @@ class Property:
         cls,
         year: int | None = None,
         city: str | None = None,
-        state: State | None = None,
-    ) -> tuple[tuple]:
+        state: Status | None = None,
+    ) -> list["Property"]:
         """Retrieves a list of properties from the database.
 
         Supports optional filters for year, city, and state.
@@ -84,6 +105,18 @@ class Property:
         if conditions:
             query = cls._parse_where_clause(conditions)
         else:
-            query = cls.base_query
+            query = cls._base_query
             params = None
         return cls._get_result_set(query, params)
+
+    def __repr__(self):
+        arguments = ", ".join(
+            [
+                f'address="{self.address}"',
+                f'city="{self.city}"',
+                f"price={self.price}",
+                f'description="{self.description}"',
+                f'status="{self.status}"',
+            ]
+        )
+        return f"{self.__class__.__name__}({arguments})"
