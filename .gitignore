@@ -2,6 +2,7 @@
 .Python
 .venv/
 __pycache__/
+.pytest_cache
 env/
 build/
 develop-eggs/
@@ -23,3 +24,4 @@ var/
 
 #
 .env
+.vscode
