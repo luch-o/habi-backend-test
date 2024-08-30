@@ -1,3 +1,5 @@
+from sqlite3 import Connection
+
 from database import Database
 from models import Property
 from pytest_mock import MockerFixture
@@ -6,7 +8,7 @@ from pytest_mock import MockerFixture
 class TestProperty:
 
     def test_property_search_default(
-        self, test_db_connection, test_data, mocker: MockerFixture
+        self, test_db_connection: Connection, test_data: None, mocker: MockerFixture
     ):
         """
         GIVEN a database with a set of known records.
