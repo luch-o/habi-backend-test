@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture
 def test_db_connection():
     """Creates a temporary sqlite3 test database."""
     _, filename = tempfile.mkstemp()

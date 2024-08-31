@@ -4,6 +4,8 @@ import os
 
 from pymysql import Connection, connect
 
+SQL_PLACEHOLDER = "%s"
+
 
 class Database:
     _connection: Connection | None = None

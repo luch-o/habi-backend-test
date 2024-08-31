@@ -1,7 +1,7 @@
 import re
 from enum import Enum
 
-from database import Database
+from database import SQL_PLACEHOLDER, Database
 
 
 class Status(str, Enum):
@@ -85,23 +85,23 @@ class Property:
         cls,
         year: int | None = None,
         city: str | None = None,
-        state: Status | None = None,
+        status: Status | None = None,
     ) -> list["Property"]:
         """Retrieves a list of properties from the database.
 
         Supports optional filters for year, city, and state.
         """
         conditions = []
-        params = {}
+        params = []
         if year is not None:
-            conditions.append("p.year = %(year)s")
-            params["year"] = year
+            conditions.append(f"p.year = {SQL_PLACEHOLDER}")
+            params.append(year)
         if city is not None:
-            conditions.append("p.city = %(city)s")
-            params["city"] = city
-        if state is not None:
-            conditions.append("s.name = %(state)s")
-            params["state"] = state.value
+            conditions.append(f"p.city = {SQL_PLACEHOLDER}")
+            params.append(city)
+        if status is not None:
+            conditions.append(f"s.name = {SQL_PLACEHOLDER}")
+            params.append(status.value)
         if conditions:
             query = cls._parse_where_clause(conditions)
         else:
