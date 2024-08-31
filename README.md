@@ -36,4 +36,33 @@ La primera tabla de usuarios sirve como base para el sistema de autenticación d
 
 ![diagrama entidad relacion](like_service/entity-relationship-diagram.drawio.png)
 
-Como propuesta de optimización para consultar propiedades ordenadas por número de likes, se puede crear un campo adicional en la tabla property like_count que lleve registro del número total de likes. Sin embargo, esto agrega la complejidad adicional de tener que mantenerlo actualizado siempre que se inserte o se elimine un registro en la tabla likes, esto se puede implementar en la lógica de la aplicación o como un trigger en la base de datos.
+Como propuesta de optimización para consultar propiedades ordenadas por número de likes, se puede crear un campo adicional en la tabla property like_count que lleve registro del número total de like y sobre el que se cree a su vez un índice para optimizar las consultas.
+
+Sin embargo, esto agrega la complejidad adicional de tener que mantenerlo actualizado siempre que se inserte o se elimine un registro en la tabla likes, esto se puede implementar en la lógica de la aplicación o como un trigger en la base de datos.
+
+### Creación de las tablas propuestas
+
+A continuación se presentan las sentencias `CREATE TABLE`
+Para crear la tabla user:
+
+```sql
+CREATE TABLE `user` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT,
+    `username`  VARCHAR(32) NOT NULL,
+    `password` CHAR(60) NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE (`username`)
+)
+```
+
+Para la taba likes:
+```sql
+CREATE TABLE `likes` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `property_id` INT(11) NOT NULL,
+    `user_id` INT(11) NOT NULL,
+    PRIMARY KEY (`id`),
+    CONSTRAINT `property_id` FOREIGN KEY REFERENCES `property`(`id`),
+    CONSTRAINT `user_id` FOREIGN KEY REFERENCES `user`(`id`),
+)
+```
