@@ -22,6 +22,11 @@ var/
 # Serverless directories
 .serverless
 
+# node files for serverless plugins
+node_modules/
+package.json
+package-lock.json
+
 #
 .env
 .vscode
