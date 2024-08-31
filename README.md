@@ -26,6 +26,24 @@ Para las pruebas unitarias, se utiliza `pytest` con `pytest_mock` y se crea una 
 
 Para la calidad del codigo se utiliza `pre-commit` incluyendo hooks como `isort`, `autopep`, y `black`. Además, el codigo se elaboró cuidadosamente incluyendo type hints, docstring y una organización modular teniendo en cuenta el principio de separación de responsabilidades.
 
+### Despliegue en AWS
+
+En caso de querer desplegar el servicio, se debe instalar [serverless framework](https://www.serverless.com/framework/docs/getting-started) y tener configuradas las credenciales para acceder programáticamente a AWS a través del CLI. Una vez cumplidos estos pre requisitos, llevar a cabo los siguientes pasos:
+
+1. Installar plugin utilizado para incluir las dependencias del servicio.
+    ```
+    $ sls plugin install -n serverless-python-requirements
+    ```
+2. Desplegar el servicio.
+    ```
+    $ sls deploy
+    ```
+3. En la salida del comando de despliegue se incluye la URL para consumir el servicio.
+
+> Adicionalmente a la entrega de la prueba se deja disponible temporalmente el servicio desplegado en caso de que se desee probarlo como parte de la revisión de la prueba.
+>
+> La URL respectiva se proporciona en el correo donde se entrega la prueba.
+
 ## Diseño Servicio de Me Gusta
 
 El diseño más sencillo para soportar esta característica incluye la creación de dos nuevas tablas:
