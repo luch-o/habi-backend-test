@@ -1,2 +1,5 @@
 [tool.autopep8]
 max_line_length = 88
+
+[tool.isort]
+profile = "black"
