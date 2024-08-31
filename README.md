@@ -25,3 +25,15 @@ La arquitectura del servicio consta únicamente de la fución lambda configurada
 Para las pruebas unitarias, se utiliza `pytest` con `pytest_mock` y se crea una base de datos temporal en tiempo de ejecución de las pruebas en `sqlite3`.
 
 Para la calidad del codigo se utiliza `pre-commit` incluyendo hooks como `isort`, `autopep`, y `black`. Además, el codigo se elaboró cuidadosamente incluyendo type hints, docstring y una organización modular teniendo en cuenta el principio de separación de responsabilidades.
+
+## Diseño Servicio de Me Gusta
+
+El diseño más sencillo para soportar esta característica incluye la creación de dos nuevas tablas:
+- user
+- likes
+
+La primera tabla de usuarios sirve como base para el sistema de autenticación de la aplicación y la tabla likes modela la relación muchos a muchos entre property y likes.
+
+![diagrama entidad relacion](like_service/entity-relationship-diagram.drawio.png)
+
+Como propuesta de optimización para consultar propiedades ordenadas por número de likes, se puede crear un campo adicional en la tabla property like_count que lleve registro del número total de likes. Sin embargo, esto agrega la complejidad adicional de tener que mantenerlo actualizado siempre que se inserte o se elimine un registro en la tabla likes, esto se puede implementar en la lógica de la aplicación o como un trigger en la base de datos.
