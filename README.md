@@ -44,6 +44,28 @@ En caso de querer desplegar el servicio, se debe instalar [serverless framework]
 >
 > La URL respectiva se proporciona en el correo donde se entrega la prueba.
 
+### Cómo consumir el servicio
+
+El servicio solo acepta requests con los metodos GET y HEAD.
+
+> Resource path, path parameters, headers, y querystring parameters no son validados.
+
+Se puede enviar el body vacío, en cuyo caso el servico retorna una consulta sin filtrar.
+
+Para filtrar la consulta por ciudad, año, y/o estado, se debe utilizar un payload como el siguiente:
+
+```json
+{
+    "filters": {
+        "year": 2000,
+        "city": "bogota",
+        "status": "pre_venta"
+    }
+}
+```
+
+Incluir campos diferentes a estos en los filtros, o un status diferente de en_venta, pre_venta o vendido, devuelve un error 400 Bad Request.
+
 ## Diseño Servicio de Me Gusta
 
 El diseño más sencillo para soportar esta característica incluye la creación de dos nuevas tablas:
